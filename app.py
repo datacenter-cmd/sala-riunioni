@@ -557,7 +557,9 @@ with tab_list:
                 e_end = st.text_input("Ora fine (HH:MM)", value=bd.get("fine","10:00"))
                 e_stato = st.selectbox("Stato", ["confermata","in attesa","cancellata"],
                                        index=["confermata","in attesa","cancellata"].index(bd.get("stato","confermata")))
-            e_att = st.text_input("Partecipanti", value=bd.get("partecipanti",""))
+            e_att_current = [x.strip() for x in bd.get("partecipanti","").split(",") if x.strip()]
+            e_att_list = st.multiselect("Partecipanti", [c for c in COLLEGHI if c != e_org], default=[x for x in e_att_current if x in COLLEGHI])
+            e_att = ", ".join(e_att_list)
             e_notes = st.text_area("Note", value=bd.get("note",""), height=80)
             sub_e, canc_e = st.columns(2)
             with sub_e:
@@ -602,7 +604,8 @@ with tab_new:
             n_start = st.text_input("Ora inizio (HH:MM) *", value="09:00")
             n_end = st.text_input("Ora fine (HH:MM) *", value="10:00")
             n_stato = st.selectbox("Stato", ["confermata","in attesa"])
-        n_att = st.text_input("Partecipanti (separati da virgola)")
+        n_att_list = st.multiselect("Partecipanti", [c for c in COLLEGHI if c != n_org])
+        n_att = ", ".join(n_att_list)
         n_notes = st.text_area("Note / Agenda", height=80)
         submitted = st.form_submit_button("🏢 Prenota sala", use_container_width=True, type="primary")
 
